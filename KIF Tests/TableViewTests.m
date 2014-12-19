@@ -8,6 +8,7 @@
 
 #import <KIF/KIF.h>
 #import "KIFTestStepValidation.h"
+#import "UIApplication-KIFAdditions.h"
 
 @interface TableViewTests : KIFTestCase
 @end
@@ -26,7 +27,7 @@
 
 - (void)testTappingRows
 {
-    [tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2] inTableViewWithAccessibilityIdentifier:@"TableView Tests Table"];
+    [tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:2] inTableViewWithAccessibilityIdentifier:@"TableView Tests Table"];
     [tester waitForViewWithAccessibilityLabel:@"Last Cell" traits:UIAccessibilityTraitSelected];
     [tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] inTableViewWithAccessibilityIdentifier:@"TableView Tests Table"];
     [tester waitForViewWithAccessibilityLabel:@"First Cell" traits:UIAccessibilityTraitSelected];
@@ -40,7 +41,7 @@
 
 - (void)testOutOfBounds
 {
-    KIFExpectFailure([tester tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:99] inTableViewWithAccessibilityIdentifier:@"TableView Tests Table"]);
+    KIFExpectFailure([[tester usingTimeout:1] tapRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:99] inTableViewWithAccessibilityIdentifier:@"TableView Tests Table"]);
 }
 
 - (void)testUnknownTable
@@ -122,6 +123,32 @@
 {
     [tester setOn:NO forSwitchWithAccessibilityLabel:@"Table View Switch"];
     [tester setOn:YES forSwitchWithAccessibilityLabel:@"Table View Switch"];
+}
+
+- (void)testButtonAbsentAfterRemoveFromSuperview
+{
+    [tester waitForViewWithAccessibilityLabel:@"Button"];
+    UIAccessibilityElement *element = [[UIApplication sharedApplication] accessibilityElementWithLabel:@"Button" accessibilityValue:nil traits:0];
+
+    [[(id)element view] removeFromSuperview];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Button"];
+}
+
+- (void)testButtonAbsentAfterSetHidden
+{
+    [tester waitForViewWithAccessibilityLabel:@"Button"];
+    UIAccessibilityElement *element = [[UIApplication sharedApplication] accessibilityElementWithLabel:@"Button" accessibilityValue:nil traits:0];
+
+    [[(id)element view] setHidden:YES];
+    [tester waitForAbsenceOfViewWithAccessibilityLabel:@"Button"];
+
+    [[(id)element view] setHidden:NO];
+    [tester waitForViewWithAccessibilityLabel:@"Button"];
+}
+
+- (void)testEnteringTextIntoATextFieldInATableCell
+{
+    [tester enterText:@"Test-Driven Development" intoViewWithAccessibilityLabel:@"TextField"];
 }
 
 @end
