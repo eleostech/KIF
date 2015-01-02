@@ -188,8 +188,8 @@ static NSTimeInterval KIFTestStepDelay = 0.1;
             [window performBlockOnDescendentViews:^(UIView *view, BOOL *stop) {
                 if (view.layer.animationKeys.count != 0 &&
                     ![view.layer.animationKeys isEqualToArray:@[@"_UIParallaxMotionEffect"]] &&     // explicitly exclude _UIParallaxMotionEffect as it is used in alertviews, and we don't want every alertview to be paused
-                    [view isVisibleInViewHierarchy]                                                 // do not wait for animatinos of views that aren't visible
-                    ) {
+                    [view isVisibleInViewHierarchy] &&                                                 // do not wait for animatinos of views that aren't visible
+                    ![view isKindOfClass:[UIImageView class]]) {
                     
                     runningAnimationFound = YES;
                     if (stop != NULL) {
