@@ -151,7 +151,7 @@
 
 static NSTimeInterval KIFTestStepDefaultAnimationWaitingTimeout = 0.5;
 static NSTimeInterval KIFTestStepDefaultTimeout = 10.0;
-static NSTimeInterval KIFTestStepDelay = 0.1;
+static NSTimeInterval KIFTestStepDelay = 0.01;
 
 + (NSTimeInterval)defaultAnimationWaitingTimeout
 {
