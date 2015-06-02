@@ -129,7 +129,7 @@
 }
 
 - (void)waitForAnimationsToFinishWithTimeout:(NSTimeInterval)timeout {
-    static const CGFloat kStabilizationWait = 0.5f;
+    static const CGFloat kStabilizationWait = 0.05f;
     
     NSTimeInterval maximumWaitingTimeInterval = timeout;
     if (maximumWaitingTimeInterval <= kStabilizationWait) {
@@ -164,6 +164,11 @@
         
         return runningAnimationFound && ([NSDate timeIntervalSinceReferenceDate] - startTime) < maximumWaitingTimeInterval ? KIFTestStepResultWait : KIFTestStepResultSuccess;
     } timeout:maximumWaitingTimeInterval + 1];
+}
+
+- (void)setFastAnimationsEnabled:(BOOL)enabled {
+  CALayer *layer = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] layer];
+  [layer setSpeed:enabled ? 100.f : 1.0f];
 }
 
 - (void)tapViewWithAccessibilityLabel:(NSString *)label
